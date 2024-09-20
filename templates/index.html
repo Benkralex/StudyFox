@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Startseite</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+  <a href="/logout">Logout</a>
+    <h1>Wähle ein Fach aus</h1>
+    <ul>
+      {% for subject in subjects %}
+      <li><a href="/{{subject.name}}">{{subject.name}}</a></li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

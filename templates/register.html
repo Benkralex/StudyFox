@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Registrieren</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+    <h1>Registrieren</h1>
+        <p>{{error}}</p>
+        <form action="/register" method="post">
+            <input type="text" name="name" placeholder="Vorname Nachname">
+            <input type="text" name="username" placeholder="Benutzername">
+            <input type="email" name="email" placeholder="E-Mail">
+            <input type="password" name="password" placeholder="Passwort">
+            <button type="submit">Registrieren</button>
+        </form>
+  <a href="/login">Login</a>
+  </body>
+</html>
