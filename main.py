@@ -189,9 +189,10 @@ if __name__ == '__main__':
     url_for('static', filename='topic.css')
     url_for('static', filename='studyfox-logo.png')
     #TEST-DATA START
-    #create_db()
+    create_db()
     Subjects.query.delete()
     Topics.query.delete()
+    Users.query.delete()
     db.session.add(Subjects(name='Mathe', description='Mathe ist die Lehre von Nummern, Formen und Mustern.'))
     db.session.add(Topics(title='Potenzen', subject_id=1, content='Potenzen sind die Multiplikation einer Zahl mit sich selbst.'))
     db.session.add(Topics(title='Wurzeln', subject_id=1, content='Wurzeln sind die Umkehrung von Potenzen.'))
