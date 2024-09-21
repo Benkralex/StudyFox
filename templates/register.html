@@ -2,20 +2,35 @@
 <html>
   <head>
     <title>Registrieren</title>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/form.css">
   </head>
   <body>
-    <h1>Registrieren</h1>
-        <p>{{error}}</p>
-        <form action="/register" method="post">
-            <input type="text" name="name" placeholder="Vorname Nachname">
-            <input type="text" name="username" placeholder="Benutzername">
-            <input type="email" name="email" placeholder="E-Mail">
-            <input type="password" name="password" placeholder="Passwort">
-            <button type="submit">Registrieren</button>
-        </form>
-  <a href="/login">Login</a>
+    <div class="login-container">
+      <div class="heading-container">
+        <img src="/static/studyfox-logo.png" width="50%" height="50%" alt="Logo" />
+        <div class="title">
+          <h1>Registration</h1>
+          Schon registriert? <a href="/login">Anmelden</a>
+        </div>
+      </div>
+      <div class="separator"></div>
+      <form action="/register" method="POST" id="registrationForm">
+        <label for="name">Vollständiger Name</label>
+        <input type="text" id="name" name="name" required value="{{name}}"/>
+
+        <label for="email">E-Mail</label>
+        <input type="email" id="email" name="email" required value="{{email}}"/>
+
+        <label for="username">Nutzername</label>
+        <input type="text" class="{%if error == 'username'%}error{%endif%}" id="username" name="username" required value="{{username}}"/>
+
+        <label for="password">Passwort</label>
+        <input type="password" id="password" name="password" required />
+
+        <button class="button" type="submit">Registrieren</button>
+      </form>
+    </div>
   </body>
 </html>
