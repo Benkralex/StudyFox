@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1bd18579-26ff-40e7-85c8-6cd07cd36ff9" name="Changes" comment="init">
+      <change afterPath="$PROJECT_DIR$/blueprints/administration/administration.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blueprints/administration/templates/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/visibility.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/visibility_off.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/form.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/form.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

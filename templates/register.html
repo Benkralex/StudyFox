@@ -18,19 +18,54 @@
       <div class="separator"></div>
       <form action="/register" method="POST" id="registrationForm">
         <label for="name">Vollständiger Name</label>
-        <input type="text" id="name" name="name" required value="{{name}}"/>
+        <input type="text" id="name" class="{%if error == 'name'%}error{%endif%}" name="name" required value="{{name}}"/>
 
         <label for="email">E-Mail</label>
-        <input type="email" id="email" name="email" required value="{{email}}"/>
+        <input type="email" id="email" class="{%if error == 'email'%}error{%endif%}" name="email" required value="{{email}}"/>
 
         <label for="username">Nutzername</label>
-        <input type="text" class="{%if error == 'username'%}error{%endif%}" id="username" name="username" required value="{{username}}"/>
+        <input type="text" class="{%if error == 'username'%}error{%endif%}"
+               pattern="[A-Za-z0-9_-]{4,10}" id="username"
+                title="4-10 Zeichen lang, nur Buchstaben, Zahlen, Unterstrich und Bindestrich erlaubt"
+               name="username" required value="{{username}}"/>
 
         <label for="password">Passwort</label>
-        <input type="password" id="password" name="password" required />
+        <div class="password-container">
+            <input type="password" id="password"
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.-_@$!%*?&])[A-Za-z\d.-_@$!%*?&]{8,}$"
+                   title="8 Zeichen lang, min 1 Großbuchstaben, min 1 Kleinbuchstaben, min 1 Zahl, min 1 Sonderzeichen"
+                   class="{%if error == 'password'%}error{%endif%}" name="password" required autocomplete="off"/>
+            <img id="showPassword" src="/static/visibility_off.svg" class="icon" onclick="togglePasswordVisibility()">
+        </div>
+
+        <label for="password">Passwort Wiederholen</label>
+        <input type="password" id="password_repeat" class="{%if error == 'password_repeat'%}error{%endif%}" name="password" required autocomplete="off"/>
 
         <button class="button" type="submit">Registrieren</button>
       </form>
     </div>
+  <script>
+    showPasIcon = document.getElementById('showPassword');
+    password = document.getElementById('password');
+
+    showPasIcon.addEventListener('click', function() {
+      if (password.type === 'password') {
+        password.type = 'text';
+        showPasIcon.src = '/static/visibility.svg';
+      } else {
+        password.type = 'password';
+        showPasIcon.src = '/static/visibility_off.svg';
+      }
+    });
+
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+      const password = document.getElementById('password').value;
+      const passwordRepeat = document.getElementById('password_repeat').value;
+      if (password !== passwordRepeat) {
+        document.getElementById('password_repeat').classList.add('error');
+        event.preventDefault();
+      }
+    });
+  </script>
   </body>
 </html>

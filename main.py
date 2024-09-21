@@ -1,5 +1,6 @@
 import hashlib
 import os
+import re
 
 from flask import Flask, render_template, url_for, send_from_directory, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
@@ -8,6 +9,8 @@ from markupsafe import escape
 app = Flask(__name__)
 
 app.secret_key = '82236§%$q7oc1351!§"452749281/&(65q2'
+username_pattern = r'[A-Za-z0-9_-]{4,10}'
+password_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.-_@$!%*?&])[A-Za-z\d.-_@$!%*?&]{8,}$'
 
 app.config['APPLICATION_ROOT'] = '/'
 app.config['PREFERRED_URL_SCHEME'] = 'http'
@@ -58,9 +61,6 @@ class ChangeReq(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     topic_id = db.Column(db.Integer, db.ForeignKey('topics.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
-
-def create_db():
-    db.create_all()
 
 def hash_password(password: str) -> str:
     salt = os.urandom(16)
@@ -128,6 +128,10 @@ def register():
         password = escape(request.form["password"])
         hashed_password = hash_password(password)
         role = escape("default")
+        if not re.match(username_pattern, username):
+            return render_template("register.html", error="username", name=name, email=email, username=username)
+        if not re.match(password_pattern, password):
+            return render_template("register.html", error="password", name=name, email=email, username=username)
         if Users.query.filter_by(username=username).first():
             return render_template("register.html", error="username", name=name, email=email, username=username)
         user = Users(name=name, username=username, email=email, password=hashed_password, role=role)
@@ -141,7 +145,7 @@ def register():
             return redirect(url_for("index"))
         return redirect(url_for("login"))
     else:
-        return render_template("register.html", error="")
+        return render_template("register.html", error="", name="", email="", username="")
 
 @app.route('/logout', strict_slashes=False)
 def logout():
@@ -182,27 +186,31 @@ def search():
     else:
         return redirect(url_for("index"))
 
+def init(withExampleData=False):
+    app.app_context().push()
+    db.create_all()
+    Subjects.query.delete()
+    Topics.query.delete()
+    Users.query.delete()
+    Questions.query.delete()
+    if withExampleData:
+        db.session.add(Subjects(name='Mathe', description='Mathe ist die Lehre von Nummern, Formen und Mustern.'))
+        db.session.add(Topics(title='Potenzen', subject_id=1, content='Potenzen sind die Multiplikation einer Zahl mit sich selbst.'))
+        db.session.add(Topics(title='Wurzeln', subject_id=1, content='Wurzeln sind die Umkehrung von Potenzen.'))
+        db.session.add(Topics(title='Brüche', subject_id=1, content='Brüche sind Zahlen, die nicht ganzzahlig sind.'))
+        db.session.add(Topics(title='Gleichungen', subject_id=1, content='Gleichungen sind mathematische Aussagen, die auf ihre Richtigkeit überprüft werden können.'))
+        db.session.add(Subjects(name='Deutsch', description='Deutsch ist die Lehre der deutschen Sprache.'))
+        db.session.add(Topics(title='Grammatik', subject_id=2, content='Grammatik ist die Lehre von der Struktur einer Sprache.'))
+        db.session.add(Topics(title='Rechtschreibung', subject_id=2, content='Rechtschreibung ist die Lehre der korrekten Schreibweise von Wörtern.'))
+        db.session.add(Topics(title='Interpunktion', subject_id=2, content='Interpunktion ist die Lehre der korrekten Zeichensetzung.'))
+        db.session.commit()
+
 if __name__ == '__main__':
     app.app_context().push()
     url_for('static', filename='style.css')
     url_for('static', filename='form.css')
     url_for('static', filename='topic.css')
     url_for('static', filename='studyfox-logo.png')
-    #TEST-DATA START
-    create_db()
-    Subjects.query.delete()
-    Topics.query.delete()
-    Users.query.delete()
-    Questions.query.delete()
-    db.session.add(Subjects(name='Mathe', description='Mathe ist die Lehre von Nummern, Formen und Mustern.'))
-    db.session.add(Topics(title='Potenzen', subject_id=1, content='Potenzen sind die Multiplikation einer Zahl mit sich selbst.'))
-    db.session.add(Topics(title='Wurzeln', subject_id=1, content='Wurzeln sind die Umkehrung von Potenzen.'))
-    db.session.add(Topics(title='Brüche', subject_id=1, content='Brüche sind Zahlen, die nicht ganzzahlig sind.'))
-    db.session.add(Topics(title='Gleichungen', subject_id=1, content='Gleichungen sind mathematische Aussagen, die auf ihre Richtigkeit überprüft werden können.'))
-    db.session.add(Subjects(name='Deutsch', description='Deutsch ist die Lehre der deutschen Sprache.'))
-    db.session.add(Topics(title='Grammatik', subject_id=2, content='Grammatik ist die Lehre von der Struktur einer Sprache.'))
-    db.session.add(Topics(title='Rechtschreibung', subject_id=2, content='Rechtschreibung ist die Lehre der korrekten Schreibweise von Wörtern.'))
-    db.session.add(Topics(title='Interpunktion', subject_id=2, content='Interpunktion ist die Lehre der korrekten Zeichensetzung.'))
-    db.session.commit()
-    #TEST-DATA END
+    url_for('static', filename='visibility.svg')
+    url_for('static', filename='visibility_off.svg')
     app.run(debug=True)

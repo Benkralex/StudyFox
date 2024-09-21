@@ -7,6 +7,7 @@ body {
   height: 100vh;
   background: linear-gradient(135deg, #f4f4f4, #e0e0e0);
   margin: 0;
+  user-select: none;
 }
 
 .login-container {
@@ -169,4 +170,16 @@ body {
   .login-container h2 {
     font-size: 1.5rem;
   }
+}
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    position: absolute;
+    right: 10px;
+    bottom: 27px;
+    cursor: pointer;
 }

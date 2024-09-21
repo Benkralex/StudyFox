@@ -21,10 +21,27 @@
         <input type="text" class="{%if error == 'username'%}error{%endif%}" id="username" name="username" required>
 
         <label for="password">Passwort</label>
-        <input type="password" class="{%if error == 'password'%}error{%endif%}" id="password" name="password" required>
+        <div class="password-container">
+            <input type="password" id="password" class="{%if error == 'username'%}error{%endif%}" name="password" required autocomplete="off"/>
+            <img id="showPassword" src="/static/visibility_off.svg" class="icon" onclick="togglePasswordVisibility()">
+        </div>
 
         <button class="button" type="submit">Login</button>
       </form>
     </div>
+  <script>
+    showPasIcon = document.getElementById('showPassword');
+    password = document.getElementById('password');
+
+    showPasIcon.addEventListener('click', function() {
+      if (password.type === 'password') {
+        password.type = 'text';
+        showPasIcon.src = '/static/visibility.svg';
+      } else {
+        password.type = 'password';
+        showPasIcon.src = '/static/visibility_off.svg';
+      }
+    });
+  </script>
   </body>
 </html>
