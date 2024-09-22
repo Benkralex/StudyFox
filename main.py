@@ -11,6 +11,8 @@ app = Flask(__name__)
 app.secret_key = '82236§%$q7oc1351!§"452749281/&(65q2'
 username_pattern = r'[A-Za-z0-9_-]{4,10}'
 password_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.-_@$!%*?&])[A-Za-z\d.-_@$!%*?&]{8,}$'
+email_pattern = r'[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'
+name_pattern = r'[A-Za-z0-9 ]{5,30}'
 
 app.config['APPLICATION_ROOT'] = '/'
 app.config['PREFERRED_URL_SCHEME'] = 'http'
@@ -132,6 +134,10 @@ def register():
             return render_template("register.html", error="username", name=name, email=email, username=username)
         if not re.match(password_pattern, password):
             return render_template("register.html", error="password", name=name, email=email, username=username)
+        if not re.match(email_pattern, email):
+            return render_template("register.html", error="email", name=name, email=email, username=username)
+        if not re.match(name_pattern, name):
+            return render_template("register.html", error="name", name=name, email=email, username=username)
         if Users.query.filter_by(username=username).first():
             return render_template("register.html", error="username", name=name, email=email, username=username)
         user = Users(name=name, username=username, email=email, password=hashed_password, role=role)

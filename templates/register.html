@@ -18,15 +18,22 @@
       <div class="separator"></div>
       <form action="/register" method="POST" id="registrationForm">
         <label for="name">Vollständiger Name</label>
-        <input type="text" id="name" class="{%if error == 'name'%}error{%endif%}" name="name" required value="{{name}}"/>
+        <input type="text" id="name"
+               class="{%if error == 'name'%}error{%endif%}"
+               pattern="[A-Za-z0-9 ]{5,30}"
+               name="name" required value="{{name}}"/>
 
         <label for="email">E-Mail</label>
-        <input type="email" id="email" class="{%if error == 'email'%}error{%endif%}" name="email" required value="{{email}}"/>
+        <input type="email" id="email"
+               class="{%if error == 'email'%}error{%endif%}"
+               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+               title="Bitte geben Sie eine gültige E-Mail-Adresse ein"
+               name="email" required value="{{email}}"/>
 
         <label for="username">Nutzername</label>
         <input type="text" class="{%if error == 'username'%}error{%endif%}"
                pattern="[A-Za-z0-9_-]{4,10}" id="username"
-                title="4-10 Zeichen lang, nur Buchstaben, Zahlen, Unterstrich und Bindestrich erlaubt"
+               title="4-10 Zeichen lang, nur Buchstaben, Zahlen, Unterstrich und Bindestrich erlaubt"
                name="username" required value="{{username}}"/>
 
         <label for="password">Passwort</label>
