@@ -1,3 +1,5 @@
 /instance/db.db
 .idea
 .idea/*
+.venv
+.venv/*
