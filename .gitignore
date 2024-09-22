@@ -5,3 +5,5 @@
 /.venv/*
 /OLD/
 /OLD/*
+/__pycache__/
+/__pycache__/*
