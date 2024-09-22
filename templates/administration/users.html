@@ -18,10 +18,16 @@
     <li class="list-group-item">{{u.email}}</li>
     <li class="list-group-item">{{u.role}}</li>
   </ul>
-  <div class="card-body">
-    <button type="button" data-bs-toggle="modal" data-bs-target="#edi_{{u.id}}" class="btn btn-secondary">Bearbeiten</button>
+  <div class="card-body pb-5">
+    <a data-bs-toggle="modal" data-bs-target="#edi_{{u.id}}"><img src="/static/edit.svg"  style="position: absolute;
+            right: 50px;
+            bottom: 23px;
+            cursor: pointer;"></a>
     {%if ((not u.role in ["admin", "owner"]) or (user['role'] == 'owner')) and not user.id == u.id%}
-      <button type="button" data-bs-toggle="modal" data-bs-target="#del_{{u.id}}" class="btn btn-danger">Löschen</button>
+      <a data-bs-toggle="modal" data-bs-target="#del_{{u.id}}"><img src="/static/delete.svg"  style="position: absolute;
+            right: 20px;
+            bottom: 23px;
+            cursor: pointer;"></a>
       {%endif%}
   </div>
 </div>
@@ -29,7 +35,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Delete {{u.username}}</h5>
+        <h5 class="modal-title">{{u.username}} löschen</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -49,7 +55,7 @@
         <h5 class="modal-title">{{u.username}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body pb-5">
           <form action="/administration/users/edit/{{u.id}}" method="post">
           <div class="mb-3">
               {%if user.role == 'owner'%}
@@ -59,7 +65,9 @@
               <option value="admin" {% if u.role == 'admin' %}selected{%endif%}>Admin</option>
               <option value="owner" {% if u.role == 'owner' %}selected{%endif%}>Owner</option>
             </select>
-            <button type="submit" class="btn btn-success mt-3">Speichern</button>
+            <button type="submit" class="btn btn-success mt-3" style="position: absolute;
+            right: 16px;
+            bottom: 16px;">Speichern</button>
               {%endif%}
               <!--<a href="/administration/users/edit/{{u.id}}/password">Passwort zurücksetzen (Coming soon)</a><br>-->
           </div>

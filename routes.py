@@ -168,8 +168,42 @@ def administration_subject_page():
     if "username" not in session or not session["admin"]:
         return redirect(url_for("index_page"))
     subjects, topics = get_topics_and_subjects()
+    topic_count = {}
+    for s in Subjects.query.all():
+        topic_count[s.id] = 0
+    for t in Topics.query.all():
+        topic_count[t.subject_id] += 1
     active = {"admin": "active"}
-    return render_template("administration/subjects.html", subjects=subjects, topics=topics, user=session["username"], admin=session["admin"], active=active)
+    return render_template("administration/subjects.html", subjects=subjects, topics=topics, user=session, admin=session["admin"], active=active, topic_count=topic_count)
+
+@app.route('/administration/subjects/delete/<s_id>', strict_slashes=False)
+def administration_subject_delete_page(s_id):
+    if "username" not in session or not session["admin"]:
+        return redirect(url_for("index_page"))
+    if (not Subjects.query.filter_by(id=s_id).first()) or session["role"] != "owner":
+        return redirect(url_for("administration_subject_page"))
+    Topics.query.filter_by(subject_id=s_id).delete()
+    Subjects.query.filter_by(id=s_id).delete()
+    db.session.commit()
+    return redirect(url_for("administration_subject_page"))
+
+@app.route('/administration/subjects/create', strict_slashes=False, methods=['GET', 'POST'])
+def administration_subject_create_page():
+    if "username" not in session or not session["admin"]:
+        return redirect(url_for("index_page"))
+    if request.method == "POST":
+        name = escape(request.form["name"])
+        description = escape(request.form["description"])
+        if not name:
+            return redirect(url_for("administration_subject_page"))
+        if not description:
+            description = ""
+        subject = Subjects(name=name, description=description)
+        db.session.add(subject)
+        db.session.commit()
+        return redirect(url_for("administration_subject_page"))
+    else:
+        return redirect(url_for("administration_subject_page"))
 
 @app.route('/administration/users', strict_slashes=False)
 def administration_user_page():
