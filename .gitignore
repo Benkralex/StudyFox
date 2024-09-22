@@ -1,5 +1,7 @@
 /instance/db.db
-.idea
-.idea/*
-.venv
-.venv/*
+/.idea
+/.idea/*
+/.venv
+/.venv/*
+/OLD/
+/OLD/*
