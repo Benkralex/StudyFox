@@ -6,11 +6,15 @@
       <ul class="list-group m-3" style="max-width:500px">
           {%for s in subjects%}
   <li class="list-group-item d-flex justify-content-between align-items-start">
-    <div class="ms-2 me-auto">
+    <div class="ms-2 me-auto" style="padding-right:35px">
       <div class="fw-bold">{{s.name}}</div>
       {{s.description}}
     </div>
     <span class="badge text-bg-primary rounded-pill">{{topic_count[s.id]}}</span>
+    <a data-bs-toggle="modal" data-bs-target="#edi_{{s.id}}"><img src="/static/edit.svg"  style="position: absolute;
+            right: 45px;
+            bottom: 5px;
+            cursor: pointer;"></a>
       {%if user['role'] == 'owner'%}<a data-bs-toggle="modal" data-bs-target="#del_{{s.id}}"><img src="/static/delete.svg" style="position: absolute;
             right: 15px;
             bottom: 5px;

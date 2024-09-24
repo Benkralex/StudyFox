@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>StudyFox | {{akt_topic.title}}</title>
+    <title>StudyFox | {{act_topic.title}}</title>
   {% include 'navbar.html' %}
   <div class="m-2">
-    <h1>{{akt_topic.title}}</h1>
-    <p>
-        {{akt_topic.content}}
-    </p>
-  <hr>
-  <form class="d-flex flex-column mt-4" style="max-width:30%" action="/{{akt_subject.name}}/{{akt_topic.title}}/question" method="post">
+    <h1>{{act_topic.title}}</h1>
+    {{html_content|safe}}
+  <hr class="border border-primary border-3 opacity-75">
+  <form class="d-flex flex-column mt-4" style="max-width:30%" action="/{{act_subject.name}}/{{act_topic.title}}/question" method="post">
     <textarea name="question" placeholder="Frage" class="form-control me-2 mb-3"></textarea>
     <button class="btn btn-primary" type="submit">Frage stellen</button>
   </form>

@@ -49,7 +49,7 @@ def topic_page(subject, topic):
     topic = Topics.query.filter_by(title=topic, subject_id=subject.id).first()
     subjects, topics = get_topics_and_subjects()
     active = {subject.name: "active"}
-    return render_template("topic.html", akt_topic=topic, akt_subject=subject, active=active, subjects=subjects, topics=topics, admin=session["admin"])
+    return render_template("topic.html", html_content=markdown_to_html(topic.content), act_topic=topic, act_subject=subject, active=active, subjects=subjects, topics=topics, admin=session["admin"])
 
 @app.route('/<subject>/<topic>/question', strict_slashes=False, methods=['GET', 'POST'])
 def question_page(subject, topic):
@@ -252,5 +252,38 @@ def administration_topic_page():
         return redirect(url_for("index_page"))
     users = Users.query.all()
     subjects, topics = get_topics_and_subjects()
+    topic_list = Topics.query.all()
+    subject_id_map = {}
+    for s in subjects:
+        subject_id_map[s.id] = s.name
     active = {"admin": "active"}
-    return render_template("administration/topics.html", subjects=subjects, topics=topics, users=users, user=session["username"], admin=session["admin"], active=active)
+    return render_template("administration/topics.html", subject_id_map=subject_id_map, topic_list=topic_list, subjects=subjects, topics=topics, users=users, user=session, admin=session["admin"], active=active)
+
+@app.route('/administration/topics/delete/<t_id>', strict_slashes=False)
+def administration_topic_delete_page(t_id):
+    if "username" not in session or not session["admin"]:
+        return redirect(url_for("index_page"))
+    if (not Topics.query.filter_by(id=t_id).first()) or session["role"] != "owner":
+        return redirect(url_for("administration_subject_page"))
+    Topics.query.filter_by(id=t_id).delete()
+    db.session.commit()
+    return redirect(url_for("administration_topic_page"))
+
+@app.route('/administration/topics/new', strict_slashes=False, methods=['POST'])
+def administration_new_topic_page():
+    if "username" not in session or not session["admin"]:
+        return redirect(url_for("index_page"))
+    if request.method == "POST":
+        content = escape(request.form["content"])
+        title = escape(request.form["title"])
+        try:
+            subject = int(request.form["subject"])
+        except ValueError:
+            return redirect(url_for("administration_topic_page"))
+        if not content or not title or not subject:
+            return redirect(url_for("administration_topic_page"))
+        db.session.add(Topics(title=title, subject_id=subject, content=content))
+        db.session.commit()
+        return redirect(url_for("index_page"))
+    else:
+        return redirect(url_for("administration_topic_page"))
