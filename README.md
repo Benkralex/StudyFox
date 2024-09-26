@@ -3,19 +3,19 @@
 - Git
 
 # Installation
-1. git clone https://github.com/Benkralex/StudyFox.git studyfox
-2. cd studyfox
-3. python -m venv studyfox-env
-4. Windows: studyfox-env\Scripts\activate\
-   Unix or MacOS: source studyfox-env/bin/activate
-5. pip install flask_sqlalchemy, Flask
-6. python init.py
-7. python main.py
+1. ´git clone https://github.com/Benkralex/StudyFox.git studyfox´
+2. ´cd studyfox´
+3. ´python -m venv studyfox-env´
+4. **Windows:** ´studyfox-env\Scripts\activate\´
+   **Unix or MacOS:** ´source studyfox-env/bin/activate´
+5. ´pip install flask_sqlalchemy, Flask´
+6. ´python init.py´
+7. ´python main.py´
 
 # Install Update
-1. git pull
+1. ´git pull´
 
 # Start Server
-1. Windows: studyfox-env\Scripts\activate\
-   Unix or MacOS: source studyfox-env/bin/activate
-2. python main.py
+1. Windows: ´studyfox-env\Scripts\activate\´
+   Unix or MacOS: ´source studyfox-env/bin/activate´
+2. ´python main.py´
