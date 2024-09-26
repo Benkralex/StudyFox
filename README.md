@@ -15,7 +15,7 @@
 # Install Update
 1. `git pull`
 
-# Start Server
+# Server Start
 1. **Windows:** `studyfox-env\Scripts\activate`\
    **Unix or MacOS:** `source studyfox-env/bin/activate`
 2. `python main.py`
