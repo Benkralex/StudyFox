@@ -19,3 +19,6 @@
 1. **Windows:** `studyfox-env\Scripts\activate`\
    **Unix or MacOS:** `source studyfox-env/bin/activate`
 2. `python main.py`
+
+
+TEST
