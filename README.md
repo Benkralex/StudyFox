@@ -3,7 +3,7 @@
 - Git
 
 # Installation
-1. `git clone https://github.com/Benkralex/StudyFox.git studyfox`
+1. `git clone --branch v1.0.0-beta --single-branch https://github.com/Benkralex/StudyFox.git studyfox`
 2. `cd studyfox`
 3. `python -m venv studyfox-env`
 4. **Windows:** `studyfox-env\Scripts\activate`\
@@ -19,6 +19,3 @@
 1. **Windows:** `studyfox-env\Scripts\activate`\
    **Unix or MacOS:** `source studyfox-env/bin/activate`
 2. `python main.py`
-
-
-TEST
