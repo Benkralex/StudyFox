@@ -7,8 +7,8 @@
           {%for s in subjects%}
   <li class="list-group-item d-flex justify-content-between align-items-start">
     <div class="ms-2 me-auto" style="padding-right:35px">
-      <div class="fw-bold">{{s.name}}</div>
-      {{s.description}}
+      <div class="fw-bold">{{s.name|safe}}</div>
+      {{s.description|safe}}
     </div>
     <span class="badge text-bg-primary rounded-pill">{{topic_count[s.id]}}</span>
     <a data-bs-toggle="modal" data-bs-target="#edi_{{s.id}}"><img src="/static/edit.svg"  style="position: absolute;

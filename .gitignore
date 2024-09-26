@@ -1,11 +1,7 @@
 /instance/db.db
 /.idea
 /.idea/*
-/.venv
-/.venv/*
-/OLD/
-/OLD/*
+/studyfox-env/
+/studyfox-env/*
 /__pycache__/
 /__pycache__/*
-/OLD/
-/OLD/*

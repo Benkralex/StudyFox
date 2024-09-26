@@ -285,8 +285,12 @@ def administration_new_topic_page():
             return redirect(url_for("administration_topic_page"))
         if not content or not title or not subject:
             return redirect(url_for("administration_topic_page"))
+        if not Subjects.query.filter_by(id=subject).first():
+            return redirect(url_for("administration_topic_page"))
+        if Topics.query.filter_by(title=title, subject_id=subject).first():
+            return redirect(url_for("administration_topic_page"))
         db.session.add(Topics(title=title, subject_id=subject, content=content))
         db.session.commit()
-        return redirect(url_for("index_page"))
+        return redirect(url_for("administration_topic_page"))
     else:
         return redirect(url_for("administration_topic_page"))
