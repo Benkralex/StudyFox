@@ -49,7 +49,20 @@ def topic_page(subject, topic):
     topic = Topics.query.filter_by(title=topic, subject_id=subject.id).first()
     subjects, topics = get_topics_and_subjects()
     active = {subject.name: "active"}
-    return render_template("topic.html", html_content=markdown_to_html(topic.content), act_topic=topic, act_subject=subject, active=active, subjects=subjects, topics=topics, admin=session["admin"])
+    questions = Questions.query.filter_by(topic_id=topic.id).all()
+    answers = {}
+    indexed_to_delete = []
+    for question in questions:
+        if question.answer_id:
+            answers[question.id] = Answers.query.filter_by(id=question.answer_id).first()
+        elif not question.user_id == session["id"]:
+            indexed_to_delete.append(question.id)
+    for i in indexed_to_delete:
+        questions = [q for q in questions if q.id != i]
+    users = {}
+    for user in Users.query.all():
+        users[user.id] = user.username
+    return render_template("topic.html", html_content=markdown_to_html(topic.content), act_topic=topic, act_subject=subject, active=active, subjects=subjects, topics=topics, admin=session["admin"], questions=questions, answers=answers, users=users)
 
 @app.route('/<subject>/<topic>/question', strict_slashes=False, methods=['GET', 'POST'])
 def question_page(subject, topic):
@@ -185,6 +198,10 @@ def administration_subject_delete_page(s_id):
         return redirect(url_for("index_page"))
     if (not Subjects.query.filter_by(id=s_id).first()) or session["role"] != "owner":
         return redirect(url_for("administration_subject_page"))
+    for t in Topics.query.filter_by(subject_id=s_id).all():
+        for q in Questions.query.filter_by(topic_id=t.id).all():
+            Answers.query.filter_by(question_id=q.id).delete()
+            Questions.query.filter_by(id=q.id).delete()
     Topics.query.filter_by(subject_id=s_id).delete()
     Subjects.query.filter_by(id=s_id).delete()
     db.session.commit()
@@ -268,6 +285,10 @@ def administration_topic_delete_page(t_id):
         return redirect(url_for("index_page"))
     if (not Topics.query.filter_by(id=t_id).first()) or session["role"] != "owner":
         return redirect(url_for("administration_subject_page"))
+    for t in Topics.query.filter_by(id=t_id).all():
+        for q in Questions.query.filter_by(topic_id=t.id).all():
+            Answers.query.filter_by(id=q.answer_id).delete()
+            Questions.query.filter_by(id=q.id).delete()
     Topics.query.filter_by(id=t_id).delete()
     db.session.commit()
     return redirect(url_for("administration_topic_page"))

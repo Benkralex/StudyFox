@@ -7,11 +7,46 @@
     <h1>{{act_topic.title}}</h1>
     {{html_content|safe}}
   <hr class="border border-primary border-3 opacity-75">
-  <form class="d-flex flex-column mt-4" style="max-width:30%" action="/{{act_subject.name}}/{{act_topic.title}}/question" method="post">
+    {% for question in questions %}
+    <div class="card mb-2" style="max-width:40%">
+      <div class="card-header p-2">
+        {{question.content|safe}}
+      </div>
+      <div class="card-body p-2">
+        <blockquote class="blockquote mb-0">
+          {%if question.answer_id%}
+          <p>{{answers[question.answer_id].content[:200]}}
+            <span id="more-1" style="display:none">{{ answers[question.answer_id].content[200:] }}</span><br>
+            <span id="dots-1" style="cursor:pointer;text-decoration:underline;
+              {%if answers[question.answer_id].content|length <= 200 %}display:none{%endif%}
+              " onClick="toggleText(1)">Mehr anzeigen</span>{%if answers[question.answer_id].content|length > 200 %}<br>{%endif%}
+          <span style="color:gray;font-size:0.8rem">{{users[answers[question.answer_id].user_id]}}</span></p>
+            {%else%}
+            <p>Noch keine Antwort</p>
+            {%endif%}
+        </blockquote>
+      </div>
+    </div>
+    {% endfor %}
+  <form class="d-flex flex-column mt-4" style="max-width:40%" action="/{{act_subject.name}}/{{act_topic.title}}/question" method="post">
     <textarea name="question" placeholder="Frage" class="form-control me-2 mb-3"></textarea>
     <button class="btn btn-primary" type="submit">Frage stellen</button>
   </form>
     </div>
+    <script>
+        function toggleText(id) {
+            var dots = document.getElementById("dots-" + id);
+            var moreText = document.getElementById("more-" + id);
+
+            if (dots.innerHTML === "Weniger anzeigen") {
+                dots.innerHTML = "Mehr anzeigen";
+                moreText.style.display = "none";
+            } else {
+                dots.innerHTML = "Weniger anzeigen";
+                moreText.style.display = "inline";
+            }
+        }
+    </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
