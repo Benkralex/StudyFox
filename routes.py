@@ -119,7 +119,10 @@ def register_page():
         email = escape(request.form["email"])
         password = escape(request.form["password"])
         hashed_password = hash_password(password)
-        role = escape("default")
+        if len(Users.query.all()) == 0:
+            role = escape("owner")
+        else:
+            role = escape("default")
         if not re.match(username_pattern, username):
             return render_template("account/register.html", error="username", name=name, email=email, username=username)
         if not re.match(password_pattern, password):
