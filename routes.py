@@ -48,6 +48,8 @@ def topic_page(subject, topic):
         session["redirect_to"] = url_for("topic_page", subject=subject, topic=topic)
         return login_page()
     subject = Subjects.query.filter_by(name=subject).first()
+    if not subject:
+        return redirect(url_for("index_page"))
     topic = Topics.query.filter_by(title=topic, subject_id=subject.id).first()
     subjects, topics = get_topics_and_subjects()
     active = {subject.name: "active"}
@@ -318,6 +320,18 @@ def administration_new_topic_page():
     else:
         return redirect(url_for("administration_topic_page"))
 
+@app.route('/administration/upload-file', strict_slashes=False)
+def administration_upload_file():
+    if "username" not in session or not session["admin"]:
+        return redirect(url_for("index_page"))
+    subjects, topics = get_topics_and_subjects()
+    topic_list = Topics.query.all()
+    subject_id_map = {}
+    for s in subjects:
+        subject_id_map[s.id] = s.name
+    active = {"admin": "active"}
+    return render_template("administration/upload_file.html", subject_id_map=subject_id_map, topic_list=topic_list, subjects=subjects, topics=topics, active=active)
+
 #####################
 # Files and Links
 #####################
@@ -328,9 +342,19 @@ def link_page(link):
     decoded_link = urllib.parse.unquote(link)
     return render_template("link.html", link=decoded_link)
 
-@app.route('/img/<path:image>', strict_slashes=False)
+@app.route('/img/<image>', strict_slashes=False)
 def img_page(image):
     if "username" not in session:
         return login_page()
-    decoded_image = urllib.parse.unquote(image)
-    return send_from_directory("img", decoded_image)
+    #decoded_image = urllib.parse.unquote(image)
+    return send_from_directory("img", image)
+
+@app.route('/upload/img', strict_slashes=False, methods=['POST', 'GET'])
+def upload_page():
+    if "username" not in session or not session["admin"]:
+        return login_page()
+    if request.method == "POST":
+        file = request.files["file"]
+        if file:
+            file.save("img/" + file.filename)
+    return redirect(url_for("index_page"))
