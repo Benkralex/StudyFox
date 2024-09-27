@@ -5,3 +5,5 @@
 /studyfox-env/*
 /__pycache__/
 /__pycache__/*
+/img/
+/img/*

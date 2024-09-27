@@ -1,10 +1,15 @@
 import os
 import hashlib
+from idlelib.replace import replace
 
 username_pattern = r'[A-Za-z0-9_-]{4,10}'
 password_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.-_@$!%*?&])[A-Za-z\d.-_@$!%*?&]{8,}$'
 email_pattern = r'[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'
 name_pattern = r'[A-Za-z0-9 ]{5,30}'
+replace_list = ["b", "i", "mark", "small", "del", "ins", "sub", "sup", "br",
+                    "table", "thead", "tbody", "tfoot", "td", "th",
+                    "blockquote", "h1", "h2", "h3", "h4", "h5", "h6",
+                    "hr", "ul", "ol", "li", "p", "code", "pre"]
 
 def hash_password(password: str) -> str:
     salt = os.urandom(16)
@@ -19,88 +24,23 @@ def verify_password(stored_hash: str, password: str) -> bool:
     return stored_hash[32:] == hashed_password
 
 
-def markdown_to_html(markdown_text):
-    lines = markdown_text.split('\n')
-    html_output = []
-    active_formats = {"ol": False, "ul": False}
-    for line, i in zip(lines, range(len(lines))):
-        if line.strip().startswith('# '):
-            html_output.append(f'<h1>{line.replace('# ', '', 1)}</h1>')
-        elif line.strip().startswith('## '):
-            html_output.append(f'<h2>{line.replace('## ', '', 1)}</h2>')
-        elif line.strip().startswith('### '):
-            html_output.append(f'<h3>{line.replace('### ', '', 1)}</h3>')
-        elif line.strip().startswith('&gt; '):
-            html_output.append(f'<blockquote>{line.replace('&gt; ', '', 1)}</blockquote>')
-        elif line.strip().startswith('---'):
-            html_output.append('<hr>')
-        elif line.strip().startswith('- '):
-            if not active_formats["ul"]:
-                html_output.append('<ul>')
-                active_formats["ul"] = True
-            html_output.append(f'<li>{line.replace('- ', '', 1)}</li>')
-            if i == len(lines) - 1 or not lines[i + 1].strip().startswith('- '):
-                html_output.append('</ul>')
-                active_formats["ul"] = False
-        elif line.strip().startswith('X. '):
-            if not active_formats["ol"]:
-                html_output.append('<ol>')
-                active_formats["ol"] = True
-            html_output.append(f'<li>{line.replace('X. ', '', 1)}</li>')
-            if i == len(lines) - 1 or not lines[i + 1].strip().startswith('X. '):
-                html_output.append('</ol>')
-                active_formats["ol"] = False
-        else:
-            html_output.append(line)
-            html_output.append('<br>')
+def escapedhtml_to_html(escapedhtml_text):
+    #a and img are not included because they have attributes
+    for tag in replace_list:
+        escapedhtml_text = escapedhtml_text.replace("&lt;" + tag + "&gt;", "<" + tag + ">")
+        escapedhtml_text = escapedhtml_text.replace("&lt;/" + tag + "&gt;", "</" + tag + ">")
 
-    html_output = '\n'.join(html_output)
-    return replace_formats(html_output)
+    #a and img only with files and links on the server
+    escapedhtml_text = escapedhtml_text.replace("&lt;a href=&#34;", "<a href=\"/link/")
+    escapedhtml_text = escapedhtml_text.replace("&#34;&gt;", "\">")
+    escapedhtml_text = escapedhtml_text.replace("&lt;/a&gt;", "</a>")
+    escapedhtml_text = escapedhtml_text.replace("&lt;img src=&#34;", "<img src=\"/img/")
+    escapedhtml_text = escapedhtml_text.replace("&#34; alt=&#34;", "\" alt=\"")
+    escapedhtml_text = escapedhtml_text.replace("&#34; width=&#34;", "\" width=\"")
+    escapedhtml_text = escapedhtml_text.replace("&#34; height=&#34;", "\" height=\"")
+    escapedhtml_text = escapedhtml_text.replace("&#34;&gt;", "\">")
 
-
-def replace_formats(text):
-    active_formats = {"**": False, "*": False, "`": False, "```": False, "~~": False, "==": False, "^": False,
-                      "~": False}
-    markdown_formats_open = {"**": "<b>", "*": "<i>", "```": "<pre><code>", "`": "<code>", "~~": "<del>",
-                             "==": "<mark>", "^": "<sup>", "~": "<sub>"}
-    markdown_formats_close = {"**": "</b>", "*": "</i>", "```": "</code></pre>", "`": "</code>", "~~": "</del>",
-                              "==": "</mark>", "^": "</sup>", "~": "</sub>"}
-    result = ""
-    i = 0
-    while i < len(text):
-        matched = False
-
-        # First check for the triple backtick (```), to handle multi-line code blocks
-        if text[i:i + 3] == "```":
-            fmt = "```"
-            if active_formats[fmt]:
-                result += markdown_formats_close[fmt]
-            else:
-                result += markdown_formats_open[fmt]
-            active_formats[fmt] = not active_formats[fmt]
-            i += 3
-            matched = True
-
-        # If not a triple backtick, check for other formatting (including single backtick)
-        if not matched:
-            for fmt in active_formats:
-                if fmt != "```" and text[i:i + len(fmt)] == fmt:
-                    if active_formats[fmt]:
-                        result += markdown_formats_close[fmt]
-                    else:
-                        result += markdown_formats_open[fmt]
-                    active_formats[fmt] = not active_formats[fmt]
-                    i += len(fmt)
-                    matched = True
-                    break
-
-        # If no format matched, just add the current character
-        if not matched:
-            result += text[i]
-            i += 1
-
-    return result
-
+    return escapedhtml_text
 
 if __name__ == '__main__':
     # Beispieltext
@@ -158,5 +98,3 @@ if __name__ == '__main__':
     
     X^2^
     """
-
-    print(markdown_to_html(markdown_text))

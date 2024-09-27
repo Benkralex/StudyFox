@@ -1,5 +1,7 @@
 import re
-from flask import render_template, url_for, request, session, redirect
+import urllib
+
+from flask import render_template, url_for, request, session, redirect, send_from_directory
 from markupsafe import escape
 from config import app, db
 from models import Subjects, Users, Answers, Topics, Questions, ChangeReq
@@ -62,7 +64,7 @@ def topic_page(subject, topic):
     users = {}
     for user in Users.query.all():
         users[user.id] = user.username
-    return render_template("topic.html", html_content=markdown_to_html(topic.content), act_topic=topic, act_subject=subject, active=active, subjects=subjects, topics=topics, admin=session["admin"], questions=questions, answers=answers, users=users)
+    return render_template("topic.html", html_content=escapedhtml_to_html(topic.content), act_topic=topic, act_subject=subject, active=active, subjects=subjects, topics=topics, admin=session["admin"], questions=questions, answers=answers, users=users)
 
 @app.route('/<subject>/<topic>/question', strict_slashes=False, methods=['GET', 'POST'])
 def question_page(subject, topic):
@@ -315,3 +317,20 @@ def administration_new_topic_page():
         return redirect(url_for("administration_topic_page"))
     else:
         return redirect(url_for("administration_topic_page"))
+
+#####################
+# Files and Links
+#####################
+@app.route('/link/<path:link>', strict_slashes=False)
+def link_page(link):
+    if "username" not in session:
+        return login_page()
+    decoded_link = urllib.parse.unquote(link)
+    return render_template("link.html", link=decoded_link)
+
+@app.route('/img/<path:image>', strict_slashes=False)
+def img_page(image):
+    if "username" not in session:
+        return login_page()
+    decoded_image = urllib.parse.unquote(image)
+    return send_from_directory("img", decoded_image)
