@@ -325,12 +325,16 @@ def administration_upload_file():
     if "username" not in session or not session["admin"]:
         return redirect(url_for("index_page"))
     subjects, topics = get_topics_and_subjects()
-    topic_list = Topics.query.all()
-    subject_id_map = {}
-    for s in subjects:
-        subject_id_map[s.id] = s.name
     active = {"admin": "active"}
-    return render_template("administration/upload_file.html", subject_id_map=subject_id_map, topic_list=topic_list, subjects=subjects, topics=topics, active=active)
+    return render_template("administration/upload_file.html", subjects=subjects, topics=topics, active=active, admin=session["admin"])
+
+@app.route('/administration/editor', strict_slashes=False)
+def editor_page():
+    if "username" not in session or not session["admin"]:
+        return login_page()
+    subjects, topics = get_topics_and_subjects()
+    active = {"admin": "active"}
+    return render_template("administration/editor.html", subjects=subjects, topics=topics, active=active, admin=session["admin"])
 
 #####################
 # Files and Links

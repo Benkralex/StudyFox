@@ -26,13 +26,13 @@ def verify_password(stored_hash: str, password: str) -> bool:
 
 def escapedhtml_to_html(escapedhtml_text):
     #a and img are not included because they have attributes
+    escapedhtml_text = escapedhtml_text.replace("&amp;", "&")
     for tag in replace_list:
         escapedhtml_text = escapedhtml_text.replace("&lt;" + tag + "&gt;", "<" + tag + ">")
         escapedhtml_text = escapedhtml_text.replace("&lt;/" + tag + "&gt;", "</" + tag + ">")
 
     #a and img only with files and links on the server
-    escapedhtml_text = escapedhtml_text.replace("&lt;a href=&#34;", "<a href=\"/link/")
-    escapedhtml_text = escapedhtml_text.replace("&#34;&gt;", "\">")
+    escapedhtml_text = escapedhtml_text.replace("&lt;a href=&#34;", "<a target=\"_blank\" href=\"/link/")
     escapedhtml_text = escapedhtml_text.replace("&lt;/a&gt;", "</a>")
     escapedhtml_text = escapedhtml_text.replace("&lt;img src=&#34;", "<img src=\"/img/")
     escapedhtml_text = escapedhtml_text.replace("&#34; alt=&#34;", "\" alt=\"")
