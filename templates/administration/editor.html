@@ -1,4 +1,4 @@
-<!--"mark", "small", "ins", "sub", "sup", "br", "table", "thead", "tbody", "tfoot", "td", "th", "blockquote", "h3", "h4", "h5", "h6", "hr", "code", "pre"-->
+<!--"blockquote", "code"-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,29 +16,37 @@
     <h1>Neues Thema erstellen</h1>
 
     <div class="btn-toolbar mb-2" role="toolbar">
-        <div class="btn-group me-2">
+        <div class="me-2">
             <button class="btn btn-outline-primary" onclick="execCmd('bold')">Bold</button>
             <button class="btn btn-outline-primary" onclick="execCmd('italic')">Italic</button>
             <button class="btn btn-outline-primary" onclick="execCmd('underline')">Underline</button>
             <button class="btn btn-outline-primary" onclick="execCmd('strikeThrough')">Strike</button>
-        </div>
-        <div class="btn-group me-2">
             <button class="btn btn-outline-success" onclick="execCmd('insertUnorderedList')">UL</button>
             <button class="btn btn-outline-success" onclick="execCmd('insertOrderedList')">OL</button>
-        </div>
-        <div class="btn-group me-2">
-            <button class="btn btn-outline-info" onclick="execCmd('insertParagraph')">Paragraph</button>
-            <button class="btn btn-outline-info" onclick="execCmd('formatBlock', 'h1')">H1</button>
-            <button class="btn btn-outline-info" onclick="execCmd('formatBlock', 'h2')">H2</button>
-        </div>
-        <div class="btn-group me-2">
+            <select class="form-select" onchange="execCmd('formatBlock', this.value)">
+                <option value="h1">Heading 1</option>
+                <option value="h2">Heading 2</option>
+                <option value="h3">Heading 3</option>
+                <option value="h4">Heading 4</option>
+                <option value="h5">Heading 5</option>
+                <option value="h6">Heading 6</option>
+                <option value="p" selected>Paragraph</option>
+            </select>
             <button class="btn btn-outline-dark" onclick="execCmd('createLink')">Link</button>
             <button class="btn btn-outline-dark" onclick="execCmd('insertImage')">Image</button>
+            <button class="btn btn-outline-primary" onclick="execCmd('subscript')">Subscript</button>
+            <button class="btn btn-outline-primary" onclick="execCmd('superscript')">Superscript</button>
+            <button class="btn btn-outline-primary" onclick="execCmd('insertHTML', '<hr>')">Horizontal Rule</button>
+            <button class="btn btn-outline-primary" onclick="execCmd('formatBlock', 'pre')">Code</button>
+            <button class="btn btn-outline-primary" onclick="insertTable()">Table</button>
+            <button class="btn btn-outline-primary" onclick="execCmd('formatBlock', 'blockquote')">Blockquote</button>
+            <input type="color" class="form-control" onchange="execCmd('foreColor', this.value)">
+            <input type="color" class="form-control" onchange="execCmd('backColor', this.value)">
         </div>
     </div>
 
     <div id="editor" contenteditable="true" class="form-control">
-        Fange hier an zu schreiben...
+        <p>Fange hier an zu schreiben...</p>
     </div>
     <br>
     <form action="/administration/topics/new" method="post">
@@ -55,23 +63,48 @@
     </form>
 </div>
     <script>
-        function execCmd(command, value = null) {
-            if (command === 'createLink') {
-                value = prompt('Enter the link URL:', 'https://');
-            } else if (command === 'insertImage') {
-                value = prompt('Enter the image URL:', 'https://');
-                if (value) {
-                    const alt = prompt('Enter alt text:', '');
-                    const width = prompt('Enter width (optional):', '');
-                    const height = prompt('Enter height (optional):', '');
-                    value = `${value}" alt="${alt}" ${width ? 'width="' + width + '"' : ''} ${height ? 'height="' + height + '"' : ''}`;
-                    command = 'insertHTML';
-                    value = `<img src="${value}"/>`;
-                }
+        function insertTable() {
+        const rows = prompt('Number of rows:', '2');
+        const cols = prompt('Number of columns:', '2');
+        if (rows && cols) {
+            let table = '<table><thead><tr>';
+            for (let i = 0; i < cols; i++) {
+                table += '<th>Header</th>';
             }
-            document.execCommand(command, false, value);
-            document.getElementById("content").value = document.getElementById("editor").innerHTML
+            table += '</tr></thead><tbody>';
+            for (let i = 0; i < rows; i++) {
+                table += '<tr>';
+                for (let j = 0; j < cols; j++) {
+                    table += '<td>Cell</td>';
+                }
+                table += '</tr>';
+            }
+            table += '</tbody></table>';
+            document.execCommand('insertHTML', false, table);
         }
+    }
+
+        function execCmd(command, value = null) {
+    if (['hr'].includes(command)) {
+        document.execCommand('insertHTML', false, `<${command}>${value || ''}</${command}>`);
+    } else {
+        if (command === 'createLink') {
+            value = prompt('Enter the link URL:', 'https://');
+        } else if (command === 'insertImage') {
+            value = prompt('Enter the image URL:', 'https://');
+            if (value) {
+                const alt = prompt('Enter alt text:', '');
+                const width = prompt('Enter width (optional):', '');
+                const height = prompt('Enter height (optional):', '');
+                value = `${value}" alt="${alt}" ${width ? 'width="' + width + '"' : ''} ${height ? 'height="' + height + '"' : ''}`;
+                command = 'insertHTML';
+                value = `<img src="${value}"/>`;
+            }
+        }
+        document.execCommand(command, false, value);
+    }
+    document.getElementById("content").value = document.getElementById("editor").innerHTML;
+}
         document.getElementById("editor").addEventListener("input", function() {
             document.getElementById("content").value = document.getElementById("editor").innerHTML
         });
