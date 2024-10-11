@@ -1,4 +1,3 @@
-<!--"blockquote", "code"-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,13 +20,12 @@
             <button class="btn" onclick="execCmd('italic')"><img src="/static/format_italic.svg" title="Italic"></button>
             <button class="btn" onclick="execCmd('underline')"><img src="/static/format_underlined.svg" title="Underline"></button>
             <button class="btn" onclick="execCmd('insertUnorderedList')"><img src="/static/format_list_bulleted.svg" title="List"></button>
-            <button class="btn" onclick="execCmd('createLink')"><img src="/static/add_link.svg" title="Link"></button>
-            <button class="btn" onclick="execCmd('insertImage')"><img src="/static/image.svg" title="Image"></button>
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#linkModal"><img src="/static/add_link.svg" title="Link"></button>
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#imageModal"><img src="/static/image.svg" title="Image"></button>
             <button class="btn" onclick="execCmd('subscript')"><img src="/static/subscript.svg" title="Subscript"></button>
             <button class="btn" onclick="execCmd('superscript')"><img src="/static/superscript.svg" title="Superscript"></button>
             <button class="btn" onclick="execCmd('insertHTML', '<hr>')"><img src="/static/horizontal_rule.svg" title="Horizontal Rule"></button>
-            <button class="btn" onclick="execCmd('formatBlock', 'pre')"><img src="/static/code.svg" title="Code"></button>
-            <button class="btn" onclick="insertTable()"><img src="/static/table.svg" title="Table"></button>
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#tableModal"><img src="/static/table.svg" title="Table"></button>
             <button class="btn" onclick="execCmd('formatBlock', 'blockquote')"><img src="/static/format_quote.svg" title="Quote"></button>
         </div>
     </div>
@@ -49,35 +47,113 @@
         <button class="btn btn-primary mt-2" type="submit">Thema erstellen</button>
     </form>
 </div>
-    <script>
-        function execCmd(command, value = null) {
-    if (['hr'].includes(command)) {
-        document.execCommand('insertHTML', false, `<${command}>${value || ''}</${command}>`);
-    } else {
-        if (command === 'createLink') {
-            value = prompt('Enter the link URL:', 'https://');
-        } else if (command === 'insertImage') {
-            value = prompt('Enter the image URL:', 'https://');
-            if (value) {
-                const alt = prompt('Enter alt text:', '');
-                const width = prompt('Enter width (optional):', '');
-                const height = prompt('Enter height (optional):', '');
-                value = `${value}" alt="${alt}" ${width ? 'width="' + width + '"' : ''} ${height ? 'height="' + height + '"' : ''}`;
-                command = 'insertHTML';
-                value = `<img src="${value}"/>`;
-            }
-        }
+
+<!-- Link Modal -->
+<div class="modal fade" id="linkModal" tabindex="-1" aria-labelledby="linkModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="linkModalLabel">Insert Link</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="linkURL" class="form-control" placeholder="Enter the link URL">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="insertLink()">Insert</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Insert Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="imageURL" class="form-control" placeholder="Enter the image URL">
+        <input type="text" id="imageAlt" class="form-control mt-2" placeholder="Enter alt text">
+        <input type="text" id="imageWidth" class="form-control mt-2" placeholder="Enter width (optional)">
+        <input type="text" id="imageHeight" class="form-control mt-2" placeholder="Enter height (optional)">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="insertImage()">Insert</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Table Modal -->
+<div class="modal fade" id="tableModal" tabindex="-1" aria-labelledby="tableModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tableModalLabel">Insert Table</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="number" id="tableRows" class="form-control" placeholder="Enter number of rows">
+        <input type="number" id="tableCols" class="form-control mt-2" placeholder="Enter number of columns">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="insertTable()">Insert</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function execCmd(command, value = null) {
         document.execCommand(command, false, value);
+        document.getElementById("content").value = document.getElementById("editor").innerHTML;
     }
+
+    function insertLink() {
+        const url = document.getElementById('linkURL').value;
+        execCmd('createLink', url);
+        document.getElementById('linkModal').querySelector('.btn-close').click();
+    }
+
+    function insertImage() {
+        const url = document.getElementById('imageURL').value;
+        const alt = document.getElementById('imageAlt').value;
+        const width = document.getElementById('imageWidth').value;
+        const height = document.getElementById('imageHeight').value;
+        const imgTag = `<img src="${url}" alt="${alt}" ${width ? 'width="' + width + '"' : ''} ${height ? 'height="' + height + '"' : ''}/>`;
+        execCmd('insertHTML', imgTag);
+        document.getElementById('imageModal').querySelector('.btn-close').click();
+    }
+
+    function insertTable() {
+        const rows = document.getElementById('tableRows').value;
+        const cols = document.getElementById('tableCols').value;
+        let table = '<table border="1">';
+        for (let i = 0; i < rows; i++) {
+            table += '<tr>';
+            for (let j = 0; j < cols; j++) {
+                table += '<td>&nbsp;</td>';
+            }
+            table += '</tr>';
+        }
+        table += '</table>';
+        execCmd('insertHTML', table);
+        document.getElementById('tableModal').querySelector('.btn-close').click();
+    }
+
+    document.getElementById("editor").addEventListener("input", function() {
+        document.getElementById("content").value = document.getElementById("editor").innerHTML;
+    });
     document.getElementById("content").value = document.getElementById("editor").innerHTML;
-}
-        document.getElementById("editor").addEventListener("input", function() {
-            document.getElementById("content").value = document.getElementById("editor").innerHTML
-        });
-        document.getElementById("content").value = document.getElementById("editor").innerHTML
-    </script>
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>

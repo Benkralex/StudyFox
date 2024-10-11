@@ -326,7 +326,7 @@ def administration_upload_file():
         return redirect(url_for("index_page"))
     subjects, topics = get_topics_and_subjects()
     active = {"admin": "active"}
-    return render_template("administration/upload_file.html", subjects=subjects, topics=topics, active=active, admin=session["admin"])
+    return render_template("administration/upload_file.html", subjects=subjects, topics=topics, active=active, admin=session["admin"], user=session)
 
 @app.route('/administration/editor', strict_slashes=False)
 def editor_page():
@@ -359,6 +359,10 @@ def upload_page():
         return login_page()
     if request.method == "POST":
         file = request.files["file"]
+        filename = escape(request.form["filename"])
+        fileextension = file.filename.split(".")[-1]
+        if fileextension not in ["png", "jpg", "jpeg", "gif"]:
+            return redirect(url_for("administration_upload_file"))
         if file:
-            file.save("img/" + file.filename)
-    return redirect(url_for("index_page"))
+            file.save("img/" + filename + "_" + session["username"] + "." + fileextension)
+    return redirect(url_for("administration_upload_file"))
