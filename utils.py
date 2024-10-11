@@ -1,6 +1,5 @@
 import os
 import hashlib
-from idlelib.replace import replace
 
 username_pattern = r'[A-Za-z0-9_-]{4,10}'
 password_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.-_@$!%*?&])[A-Za-z\d.-_@$!%*?&]{8,}$'

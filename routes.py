@@ -204,7 +204,7 @@ def administration_subject_delete_page(s_id):
         return redirect(url_for("administration_subject_page"))
     for t in Topics.query.filter_by(subject_id=s_id).all():
         for q in Questions.query.filter_by(topic_id=t.id).all():
-            Answers.query.filter_by(question_id=q.id).delete()
+            Answers.query.filter_by(id=q.answer_id).delete()
             Questions.query.filter_by(id=q.id).delete()
     Topics.query.filter_by(subject_id=s_id).delete()
     Subjects.query.filter_by(id=s_id).delete()

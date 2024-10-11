@@ -17,31 +17,18 @@
 
     <div class="btn-toolbar mb-2" role="toolbar">
         <div class="me-2">
-            <button class="btn btn-outline-primary" onclick="execCmd('bold')">Bold</button>
-            <button class="btn btn-outline-primary" onclick="execCmd('italic')">Italic</button>
-            <button class="btn btn-outline-primary" onclick="execCmd('underline')">Underline</button>
-            <button class="btn btn-outline-primary" onclick="execCmd('strikeThrough')">Strike</button>
-            <button class="btn btn-outline-success" onclick="execCmd('insertUnorderedList')">UL</button>
-            <button class="btn btn-outline-success" onclick="execCmd('insertOrderedList')">OL</button>
-            <select class="form-select" onchange="execCmd('formatBlock', this.value)">
-                <option value="h1">Heading 1</option>
-                <option value="h2">Heading 2</option>
-                <option value="h3">Heading 3</option>
-                <option value="h4">Heading 4</option>
-                <option value="h5">Heading 5</option>
-                <option value="h6">Heading 6</option>
-                <option value="p" selected>Paragraph</option>
-            </select>
-            <button class="btn btn-outline-dark" onclick="execCmd('createLink')">Link</button>
-            <button class="btn btn-outline-dark" onclick="execCmd('insertImage')">Image</button>
-            <button class="btn btn-outline-primary" onclick="execCmd('subscript')">Subscript</button>
-            <button class="btn btn-outline-primary" onclick="execCmd('superscript')">Superscript</button>
-            <button class="btn btn-outline-primary" onclick="execCmd('insertHTML', '<hr>')">Horizontal Rule</button>
-            <button class="btn btn-outline-primary" onclick="execCmd('formatBlock', 'pre')">Code</button>
-            <button class="btn btn-outline-primary" onclick="insertTable()">Table</button>
-            <button class="btn btn-outline-primary" onclick="execCmd('formatBlock', 'blockquote')">Blockquote</button>
-            <input type="color" class="form-control" onchange="execCmd('foreColor', this.value)">
-            <input type="color" class="form-control" onchange="execCmd('backColor', this.value)">
+            <button class="btn" onclick="execCmd('bold')"><img src="/static/format_bold.svg" title="Bold"></button>
+            <button class="btn" onclick="execCmd('italic')"><img src="/static/format_italic.svg" title="Italic"></button>
+            <button class="btn" onclick="execCmd('underline')"><img src="/static/format_underlined.svg" title="Underline"></button>
+            <button class="btn" onclick="execCmd('insertUnorderedList')"><img src="/static/format_list_bulleted.svg" title="List"></button>
+            <button class="btn" onclick="execCmd('createLink')"><img src="/static/add_link.svg" title="Link"></button>
+            <button class="btn" onclick="execCmd('insertImage')"><img src="/static/image.svg" title="Image"></button>
+            <button class="btn" onclick="execCmd('subscript')"><img src="/static/subscript.svg" title="Subscript"></button>
+            <button class="btn" onclick="execCmd('superscript')"><img src="/static/superscript.svg" title="Superscript"></button>
+            <button class="btn" onclick="execCmd('insertHTML', '<hr>')"><img src="/static/horizontal_rule.svg" title="Horizontal Rule"></button>
+            <button class="btn" onclick="execCmd('formatBlock', 'pre')"><img src="/static/code.svg" title="Code"></button>
+            <button class="btn" onclick="insertTable()"><img src="/static/table.svg" title="Table"></button>
+            <button class="btn" onclick="execCmd('formatBlock', 'blockquote')"><img src="/static/format_quote.svg" title="Quote"></button>
         </div>
     </div>
 
@@ -63,27 +50,6 @@
     </form>
 </div>
     <script>
-        function insertTable() {
-        const rows = prompt('Number of rows:', '2');
-        const cols = prompt('Number of columns:', '2');
-        if (rows && cols) {
-            let table = '<table><thead><tr>';
-            for (let i = 0; i < cols; i++) {
-                table += '<th>Header</th>';
-            }
-            table += '</tr></thead><tbody>';
-            for (let i = 0; i < rows; i++) {
-                table += '<tr>';
-                for (let j = 0; j < cols; j++) {
-                    table += '<td>Cell</td>';
-                }
-                table += '</tr>';
-            }
-            table += '</tbody></table>';
-            document.execCommand('insertHTML', false, table);
-        }
-    }
-
         function execCmd(command, value = null) {
     if (['hr'].includes(command)) {
         document.execCommand('insertHTML', false, `<${command}>${value || ''}</${command}>`);
