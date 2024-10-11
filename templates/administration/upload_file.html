@@ -7,10 +7,10 @@
       <h1>Hochladen</h1>
       <form action="/upload/img" method="post" enctype="multipart/form-data">
         <div class="mb-3">
-          <input type="file" class="form-control" id="file" name="file">
+          <input type="file" class="form-control" id="file" name="file" accept="image/*" required>
         </div>
         <div class="input-group mb-3">
-          <input type="text" id="filename" name="filename" class="form-control" placeholder="Dateiname" aria-label="Dateiname" >
+          <input type="text" id="filename" name="filename" class="form-control" placeholder="Dateiname" aria-label="Dateiname" required>
           <span class="input-group-text">_{{user.username}}</span>
         </div>
         <button type="submit" class="btn btn-primary">Hochladen</button>

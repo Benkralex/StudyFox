@@ -177,7 +177,9 @@ def logout_page():
 #####################
 @app.route('/administration', strict_slashes=False)
 def administration_page():
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     subjects, topics = get_topics_and_subjects()
     active = {"admin": "active"}
@@ -185,7 +187,9 @@ def administration_page():
 
 @app.route('/administration/subjects', strict_slashes=False)
 def administration_subject_page():
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     subjects, topics = get_topics_and_subjects()
     topic_count = {}
@@ -198,7 +202,9 @@ def administration_subject_page():
 
 @app.route('/administration/subjects/delete/<s_id>', strict_slashes=False)
 def administration_subject_delete_page(s_id):
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     if (not Subjects.query.filter_by(id=s_id).first()) or session["role"] != "owner":
         return redirect(url_for("administration_subject_page"))
@@ -213,7 +219,9 @@ def administration_subject_delete_page(s_id):
 
 @app.route('/administration/subjects/create', strict_slashes=False, methods=['GET', 'POST'])
 def administration_subject_create_page():
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     if request.method == "POST":
         name = escape(request.form["name"])
@@ -231,7 +239,9 @@ def administration_subject_create_page():
 
 @app.route('/administration/users', strict_slashes=False)
 def administration_user_page():
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     users = Users.query.all()
     subjects, topics = get_topics_and_subjects()
@@ -240,7 +250,9 @@ def administration_user_page():
 
 @app.route('/administration/users/delete/<user_id>', strict_slashes=False)
 def administration_user_delete_page(user_id):
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     if not Users.query.filter_by(id=user_id).first():
         return redirect(url_for("administration_user_page"))
@@ -255,7 +267,9 @@ def administration_user_delete_page(user_id):
 
 @app.route('/administration/users/edit/<user_id>', strict_slashes=False, methods=['GET', 'POST'])
 def administration_user_edit_page(user_id):
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     user = Users.query.filter_by(id=user_id).first()
     if not user:
@@ -272,7 +286,9 @@ def administration_user_edit_page(user_id):
 
 @app.route('/administration/topics', strict_slashes=False)
 def administration_topic_page():
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     users = Users.query.all()
     subjects, topics = get_topics_and_subjects()
@@ -285,7 +301,9 @@ def administration_topic_page():
 
 @app.route('/administration/topics/delete/<t_id>', strict_slashes=False)
 def administration_topic_delete_page(t_id):
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     if (not Topics.query.filter_by(id=t_id).first()) or session["role"] != "owner":
         return redirect(url_for("administration_subject_page"))
@@ -299,7 +317,9 @@ def administration_topic_delete_page(t_id):
 
 @app.route('/administration/topics/new', strict_slashes=False, methods=['POST'])
 def administration_new_topic_page():
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     if request.method == "POST":
         content = escape(request.form["content"])
@@ -322,7 +342,9 @@ def administration_new_topic_page():
 
 @app.route('/administration/upload-file', strict_slashes=False)
 def administration_upload_file():
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
         return redirect(url_for("index_page"))
     subjects, topics = get_topics_and_subjects()
     active = {"admin": "active"}
@@ -330,11 +352,40 @@ def administration_upload_file():
 
 @app.route('/administration/editor', strict_slashes=False)
 def editor_page():
-    if "username" not in session or not session["admin"]:
+    if "username" not in session:
         return login_page()
+    if not session["admin"]:
+        return redirect(url_for("index_page"))
     subjects, topics = get_topics_and_subjects()
     active = {"admin": "active"}
-    return render_template("administration/editor.html", subjects=subjects, topics=topics, active=active, admin=session["admin"])
+    imgs = []
+    for img in os.listdir("img"):
+        imgs.append(img)
+    return render_template("administration/editor.html", subjects=subjects, topics=topics, active=active, admin=session["admin"], imgs=imgs)
+
+@app.route('/administration/gallery', strict_slashes=False)
+def gallery_page():
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
+        return redirect(url_for("index_page"))
+    subjects, topics = get_topics_and_subjects()
+    active = {"admin": "active"}
+    imgs = []
+    for img in os.listdir("img"):
+        imgs.append(img)
+    return render_template("administration/gallery.html", subjects=subjects, topics=topics, active=active, admin=session["admin"], imgs=imgs)
+
+@app.route('/administration/gallery/delete/<img>', strict_slashes=False)
+def gallery_delete_page(img):
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
+        return redirect(url_for("index_page"))
+    if not os.path.exists("img/" + img):
+        return redirect(url_for("gallery_page"))
+    os.remove("img/" + img)
+    return redirect(url_for("gallery_page"))
 
 #####################
 # Files and Links

@@ -3,6 +3,9 @@
   <head>
     <title>StudyFox | Verwaltung</title>
   {% include 'navbar.html' %}
+    <div class="m-3">
+        <h1>Nutzer</h1>
+    </div>
       <div class="row p-2" style="margin:0px">
       {% for u in users%}
       <div class="card m-2
@@ -31,7 +34,7 @@
       {%endif%}
   </div>
 </div>
-<div class="modal fade" tabindex="-1" id="del_{{u.id}}" aria-hidden="true" aria-labelledby="exampleModalLabel">
+<div class="modal fade" tabindex="-1" id="del_{{u.id}}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -48,7 +51,7 @@
   </div>
 </div>
 
-<div class="modal fade" tabindex="-1" id="edi_{{u.id}}" aria-hidden="true" aria-labelledby="exampleModalLabel">
+<div class="modal fade" tabindex="-1" id="edi_{{u.id}}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

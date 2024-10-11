@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <title>StudyFox | Verwaltung</title>
     <style>
@@ -15,7 +15,7 @@
     <h1>Neues Thema erstellen</h1>
 
     <div class="btn-toolbar mb-2" role="toolbar">
-        <div class="me-2">
+        <div class="me-2 btn-group border">
             <button class="btn" onclick="execCmd('bold')"><img src="/static/format_bold.svg" title="Bold"></button>
             <button class="btn" onclick="execCmd('italic')"><img src="/static/format_italic.svg" title="Italic"></button>
             <button class="btn" onclick="execCmd('underline')"><img src="/static/format_underlined.svg" title="Underline"></button>
@@ -76,14 +76,22 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="text" id="imageURL" class="form-control" placeholder="Enter the image URL">
-        <input type="text" id="imageAlt" class="form-control mt-2" placeholder="Enter alt text">
-        <input type="text" id="imageWidth" class="form-control mt-2" placeholder="Enter width (optional)">
-        <input type="text" id="imageHeight" class="form-control mt-2" placeholder="Enter height (optional)">
+        <div class="input-group mb-3">
+          <span class="input-group-text">/img/</span>
+          <input type="text" id="imageURL"  class="form-control" placeholder="Name des Bildes (vorher Hochgeladen)" list="images">
+            <datalist id="images">
+                {% for i in imgs %}
+                    <option value="{{i}}">
+                {% endfor %}
+            </datalist>
+          </input>
+        </div>
+        <input type="text" id="imageAlt" class="form-control mt-2" placeholder="Alt-Text">
+        <input type="text" id="imageWidth" class="form-control mt-2" placeholder="Breite (optional)">
+        <input type="text" id="imageHeight" class="form-control mt-2" placeholder="Höhe (optional)">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="insertImage()">Insert</button>
+        <button type="button" class="btn btn-primary" onclick="insertImage()">Einfügen</button>
       </div>
     </div>
   </div>
@@ -122,7 +130,7 @@
     }
 
     function insertImage() {
-        const url = document.getElementById('imageURL').value;
+        const url = "/img/" + document.getElementById('imageURL').value;
         const alt = document.getElementById('imageAlt').value;
         const width = document.getElementById('imageWidth').value;
         const height = document.getElementById('imageHeight').value;
