@@ -3,6 +3,8 @@
 /.idea/*
 /studyfox-env/
 /studyfox-env/*
+/studyfox-env-linux/
+/studyfox-env-linux/*
 /__pycache__/
 /__pycache__/*
 /img/
