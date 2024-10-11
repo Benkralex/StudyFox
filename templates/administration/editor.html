@@ -53,15 +53,14 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="linkModalLabel">Insert Link</h5>
+        <h5 class="modal-title" id="linkModalLabel">Link einfügen</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="text" id="linkURL" class="form-control" placeholder="Enter the link URL">
+        <input type="text" id="linkURL" class="form-control" placeholder="Link einfügen (https://example.com/)">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="insertLink()">Insert</button>
+        <button type="button" class="btn btn-primary" onclick="insertLink()">Einfügen</button>
       </div>
     </div>
   </div>
@@ -72,7 +71,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="imageModalLabel">Insert Image</h5>
+        <h5 class="modal-title" id="imageModalLabel">Bild einfügen</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -102,16 +101,15 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="tableModalLabel">Insert Table</h5>
+        <h5 class="modal-title" id="tableModalLabel">Tabelle einfügen</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="number" id="tableRows" class="form-control" placeholder="Enter number of rows">
-        <input type="number" id="tableCols" class="form-control mt-2" placeholder="Enter number of columns">
+        <input type="number" id="tableRows" class="form-control" placeholder="Anzahl Zeilen">
+        <input type="number" id="tableCols" class="form-control mt-2" placeholder="Anzahl Spalten">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="insertTable()">Insert</button>
+        <button type="button" class="btn btn-primary" onclick="insertTable()">Einfügen</button>
       </div>
     </div>
   </div>
