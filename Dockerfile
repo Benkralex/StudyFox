@@ -8,6 +8,8 @@ COPY ./src /app
 
 RUN chmod +x /app/gunicorn.sh
 
+RUN python init.py
+
 EXPOSE 8000
 
 CMD ["bash", "gunicorn.sh"]
