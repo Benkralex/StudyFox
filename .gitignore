@@ -1,4 +1,4 @@
-/instance/db.db
+/src/instance/db.db
 /.idea
 /.idea/*
 /studyfox-env/
@@ -7,5 +7,5 @@
 /studyfox-env-linux/*
 /__pycache__/
 /__pycache__/*
-/img/
-/img/*
+/src/img/
+/src/img/*
