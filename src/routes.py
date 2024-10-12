@@ -55,14 +55,9 @@ def topic_page(subject, topic):
     active = {subject.name: "active"}
     questions = Questions.query.filter_by(topic_id=topic.id).all()
     answers = {}
-    indexed_to_delete = []
     for question in questions:
         if question.answer_id:
             answers[question.id] = Answers.query.filter_by(id=question.answer_id).first()
-        elif not question.user_id == session["id"]:
-            indexed_to_delete.append(question.id)
-    for i in indexed_to_delete:
-        questions = [q for q in questions if q.id != i]
     users = {}
     for user in Users.query.all():
         users[user.id] = user.username
@@ -386,6 +381,29 @@ def gallery_delete_page(img):
         return redirect(url_for("gallery_page"))
     os.remove("img/" + img)
     return redirect(url_for("gallery_page"))
+
+@app.route('/administration/questions', strict_slashes=False)
+def administration_question_page():
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
+        return redirect(url_for("index_page"))
+
+    subject_filter = request.args.get('subject')
+
+    query = Questions.query.join(Topics).join(Subjects).filter(Questions.answer_id is None)
+    if subject_filter:
+        query = query.filter(Topics.subject_id == subject_filter)
+    questions = query.order_by(Subjects.name, Topics.title).all()
+
+    users = Users.query.all()
+    subjects, topics = get_topics_and_subjects()
+    topics_json = {subject_id: [{'id': topic.id, 'title': topic.title} for topic in topic_list] for subject_id, topic_list in topics.items()}
+    topics_names = {t.id: t.title for topic in topics for t in topics[topic]}
+    subjects_names = {t.id: Subjects.query.filter_by(id=t.subject_id).first().name for topic in topics for t in topics[topic]}
+    active = {"admin": "active"}
+    subject_filter = {"id": subject_filter, "name": Subjects.query.filter_by(id=subject_filter).first().name} if subject_filter else None
+    return render_template("administration/questions.html", subjects=subjects, topics=topics_json, users=users, questions=questions, user=session, admin=session["admin"], active=active, topics_names=topics_names, subjects_names=subjects_names, subject_filter=subject_filter)
 
 #####################
 # Files and Links

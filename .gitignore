@@ -5,7 +5,7 @@
 /studyfox-env/*
 /studyfox-env-linux/
 /studyfox-env-linux/*
-/__pycache__/
-/__pycache__/*
+/src/__pycache__/
+/src/__pycache__/*
 /src/img/
 /src/img/*
