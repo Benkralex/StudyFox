@@ -389,21 +389,40 @@ def administration_question_page():
     if not session["admin"]:
         return redirect(url_for("index_page"))
 
-    subject_filter = request.args.get('subject')
-
-    query = Questions.query.join(Topics).join(Subjects).filter(Questions.answer_id is None)
-    if subject_filter:
-        query = query.filter(Topics.subject_id == subject_filter)
+    query = Questions.query.join(Topics).join(Subjects).filter(Questions.answer_id.is_(None))
     questions = query.order_by(Subjects.name, Topics.title).all()
 
     users = Users.query.all()
     subjects, topics = get_topics_and_subjects()
-    topics_json = {subject_id: [{'id': topic.id, 'title': topic.title} for topic in topic_list] for subject_id, topic_list in topics.items()}
     topics_names = {t.id: t.title for topic in topics for t in topics[topic]}
     subjects_names = {t.id: Subjects.query.filter_by(id=t.subject_id).first().name for topic in topics for t in topics[topic]}
     active = {"admin": "active"}
-    subject_filter = {"id": subject_filter, "name": Subjects.query.filter_by(id=subject_filter).first().name} if subject_filter else None
-    return render_template("administration/questions.html", subjects=subjects, topics=topics_json, users=users, questions=questions, user=session, admin=session["admin"], active=active, topics_names=topics_names, subjects_names=subjects_names, subject_filter=subject_filter)
+    topic_to_subject_ids = {}
+    for topic in topics:
+        for t in topics[topic]:
+            topic_to_subject_ids[t.id] = t.subject_id
+    usernames = {user.id: user.username for user in users}
+    return render_template("administration/questions.html", subjects=subjects, topics=topics, users=users, questions=questions, user=session, admin=session["admin"], active=active, topics_names=topics_names, subjects_names=subjects_names, topic_to_subject_ids=topic_to_subject_ids, usernames=usernames)
+
+@app.route('/administration/questions/answer/<q_id>', strict_slashes=False, methods=['POST'])
+def administration_question_answer_page(q_id):
+    if "username" not in session:
+        return login_page()
+    if not session["admin"]:
+        return redirect(url_for("index_page"))
+    if request.method == "POST":
+        answer = escape(request.form["answer"])
+        question = Questions.query.filter_by(id=q_id).first()
+        if not question:
+            return redirect(url_for("administration_question_page"))
+        answer = Answers(content=answer, user_id=session["id"])
+        db.session.add(answer)
+        db.session.commit()
+        question.answer_id = answer.id
+        db.session.commit()
+        return redirect(url_for("administration_question_page"))
+    else:
+        return redirect(url_for("administration_question_page"))
 
 #####################
 # Files and Links
