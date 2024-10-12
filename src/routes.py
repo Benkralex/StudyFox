@@ -354,6 +354,8 @@ def editor_page():
     subjects, topics = get_topics_and_subjects()
     active = {"admin": "active"}
     imgs = []
+    if not os.path.exists("img"):
+        os.makedirs("img")
     for img in os.listdir("img"):
         imgs.append(img)
     return render_template("administration/editor.html", subjects=subjects, topics=topics, active=active, admin=session["admin"], imgs=imgs)

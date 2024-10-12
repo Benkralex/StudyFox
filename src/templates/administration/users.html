@@ -23,12 +23,12 @@
   </ul>
   <div class="card-body pb-5">
     <a data-bs-toggle="modal" data-bs-target="#edi_{{u.id}}"><img src="/static/edit.svg"  style="position: absolute;
-            right: 50px;
+            right: 20px;
             bottom: 23px;
             cursor: pointer;"></a>
     {%if ((not u.role in ["admin", "owner"]) or (user['role'] == 'owner')) and not user.id == u.id%}
       <a data-bs-toggle="modal" data-bs-target="#del_{{u.id}}"><img src="/static/delete.svg"  style="position: absolute;
-            right: 20px;
+            right: 50px;
             bottom: 23px;
             cursor: pointer;"></a>
       {%endif%}

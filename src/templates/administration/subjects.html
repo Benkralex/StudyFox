@@ -15,18 +15,18 @@
     </div>
     <span class="badge text-bg-primary rounded-pill">{{topic_count[s.id]}}</span>
     <a data-bs-toggle="modal" data-bs-target="#edi_{{s.id}}"><img src="/static/edit.svg"  style="position: absolute;
-            right: 45px;
+            right: 15px;
             bottom: 5px;
             cursor: pointer;"></a>
       {%if user['role'] == 'owner'%}<a data-bs-toggle="modal" data-bs-target="#del_{{s.id}}"><img src="/static/delete.svg" style="position: absolute;
-            right: 15px;
+            right: 45px;
             bottom: 5px;
             cursor: pointer;"></a>{%endif%}
   </li>
     {%endfor%}
 </ul>
 {%for s in subjects%}
-<div class="modal fade" tabindex="-1" id="del_{{s.id}}" aria-hidden="true" aria-labelledby="exampleModalLabel">
+<div class="modal fade" tabindex="-1" id="del_{{s.id}}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -46,7 +46,7 @@
     <div class="m-3">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_subject"><img src="/static/add.svg">Fach hinzufügen</button>
       </div>
-    <div class="modal fade" tabindex="-1" id="add_subject" aria-hidden="true" aria-labelledby="exampleModalLabel">
+    <div class="modal fade" tabindex="-1" id="add_subject" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

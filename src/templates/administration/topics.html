@@ -14,18 +14,18 @@
     </div>
     <span class="badge text-bg-primary rounded-pill">{{subject_id_map[t.subject_id]}}</span>
     <a data-bs-toggle="modal" data-bs-target="#edi_{{t.id}}"><img src="/static/edit.svg"  style="position: absolute;
-            right: 45px;
+            right: 15px;
             bottom: 5px;
             cursor: pointer;"></a>
       {%if user['role'] == 'owner'%}<a data-bs-toggle="modal" data-bs-target="#del_{{t.id}}"><img src="/static/delete.svg" style="position: absolute;
-            right: 15px;
+            right: 45px;
             bottom: 5px;
             cursor: pointer;"></a>{%endif%}
   </li>
     {%endfor%}
 </ul>
     {%for t in topic_list%}
-<div class="modal fade" tabindex="-1" id="del_{{t.id}}" aria-hidden="true" aria-labelledby="exampleModalLabel">
+<div class="modal fade" tabindex="-1" id="del_{{t.id}}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

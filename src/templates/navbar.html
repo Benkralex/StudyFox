@@ -19,7 +19,8 @@
           <a class="nav-link {{active['index']}}" aria-current="page" href="/">Starseite</a>
         </li>
         {% for subject in subjects %}
-        <li class="nav-item dropdown">
+          {% if topics[subject.name]%}
+        <li class="nav-item dropdown" style="height:fit-content;">
           <a class="nav-link dropdown-toggle {{active[subject.name]}}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             {{ subject.name|safe }}
           </a>
@@ -28,16 +29,17 @@
                 <li>
                     <a class="dropdown-item" href="/{{subject.name|safe}}/{{topic.title|safe}}">{{topic.title|safe}}</a>
                 </li>
-                {% endfor %}
+            {% endfor %}
           </ul>
         </li>
+          {% endif %}
         {% endfor %}
         {% if admin %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle {{active['admin']}}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Verwaltung
           </a>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu" style="height:fit-content;">
                 <li>
                     <a class="dropdown-item" href="/administration/topics">Themen</a>
                 </li>
