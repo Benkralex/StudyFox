@@ -37,3 +37,9 @@ class ChangeReq(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     topic_id = db.Column(db.Integer, db.ForeignKey('topics.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
+
+class Messeges(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    content = db.Column(db.Text, nullable=False)
