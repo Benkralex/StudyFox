@@ -41,5 +41,6 @@ class ChangeReq(db.Model):
 class Messeges(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    
+    by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    date = db.Column(db.DateTime(timezone=True)
     content = db.Column(db.Text, nullable=False)
