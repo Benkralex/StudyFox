@@ -44,3 +44,9 @@ class Messages(db.Model):
     by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     date = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    
+class History(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    topic_id = db.Column(db.Integer, db.ForeignKey('topics.id'), nullable=False)
+    date = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
