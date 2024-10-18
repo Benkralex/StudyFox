@@ -38,9 +38,9 @@ class ChangeReq(db.Model):
     topic_id = db.Column(db.Integer, db.ForeignKey('topics.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
 
-class Messeges(db.Model):
+class Messages(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    date = db.Column(db.DateTime(timezone=True)
+    date = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
     content = db.Column(db.Text, nullable=False)
